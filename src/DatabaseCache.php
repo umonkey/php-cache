@@ -13,18 +13,31 @@ use Umonkey\Database;
 
 class DatabaseCache implements implements CacheInterface
 {
+    /**
+     * Database interface.
+     *
+     * @var Database
+     **/
     protected $db;
 
-    public function __construct(Database $db)
+    /**
+     * Default TTL value.
+     *
+     * @var int|null
+     **/
+    protected $ttl;
+
+    public function __construct(Database $db, $settings)
     {
         $this->db = $db;
+        $this->ttl = $settings['cache']['default_ttl'] ?? null;
     }
 
     public function get($key, $default = null)
     {
         $key = md5($key);
 
-        $res = $this->db->fetchOne('SELECT * FROM cache WHERE key = ?', [$key]);
+        $res = $this->db->fetchOne('SELECT * FROM `cache` WHERE `key` = ?', [$key]);
         if (null === $res) {
             return $default;
         }
@@ -40,11 +53,15 @@ class DatabaseCache implements implements CacheInterface
     {
         $key = md5($key);
 
-        $old = $this->db->fetchCell('SELECT key FROM cache WHERE key = ?', [$key]);
+        $ttl = $ttl ?? $this->ttl;
+
+        $old = $this->db->fetchCell('SELECT `key` FROM `cache` WHERE `key` = ?', [$key]);
         if ($old !== null) {
             $this->db->update('cache', [
                 'value' => serialize($value),
                 'expires' => $ttl === null ? null : time() + $ttl,
+            ], [
+                'key' => $key,
             ]);
         } else {
             $this->db->insert('cache', [
@@ -58,12 +75,12 @@ class DatabaseCache implements implements CacheInterface
     public function delete($key)
     {
         $key = md5($key);
-        $this->db->query('DELETE FROM cache WHERE key = ?', [$key]);
+        $this->db->query('DELETE FROM `cache` WHERE `key` = ?', [$key]);
     }
 
     public function clear()
     {
-        $this->db->query('DELETE FROM cache');
+        $this->db->query('DELETE FROM `cache`');
     }
 
     public function getMultiple($keys, $default = null)
@@ -95,7 +112,7 @@ class DatabaseCache implements implements CacheInterface
     {
         $key = md5($key);
 
-        $res = $this->db->fetchOne('SELECT * FROM cache WHERE key = ?', [$key]);
+        $res = $this->db->fetchOne('SELECT * FROM `cache` WHERE `key` = ?', [$key]);
         return $res !== null;
     }
 }
