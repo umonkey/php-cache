@@ -1,0 +1,27 @@
+{
+    "name": "umonkey/php-cache",
+    "description": "Simple PSR-16 compliant cache component",
+    "version": "1.0.0",
+    "type": "library",
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "homepage": "https://github.com/umonkey/php-cache/",
+    "require": {
+        "php": ">=7.2",
+        "psr/simple-cache": "^1."
+    },
+    "provide": {
+        "psr/simple-cache-implementation": "1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Umonkey\\Cache\\": "src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Justin Forest",
+            "email": "hex@umonkey.net"
+        }
+    ]
+}
