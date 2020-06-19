@@ -5,7 +5,7 @@ Mostly for use with my other components in Slim based applications.
 
 ## Usage
 
-Use by addint this to `config/dependencies.php`:
+Initialize by adding this to `config/dependencies.php`:
 
 ```
 $container['cache'] = function ($c) {
@@ -13,7 +13,39 @@ $container['cache'] = function ($c) {
 };
 ```
 
-Configuration not needed.
+Work with the cache like this:
+
+```
+use Psr\SimpleCache\CacheInterface;
+
+class SomeClass
+{
+    /**
+     * @var CacheInterface
+     **/
+    protected $cache;
+
+    public function __construct(CacheInterface $cache)
+    {
+        $this->cache = $cache;
+    }
+
+    public function getValue(string $key): string
+    {
+        return $this->cache->get($key);
+    }
+
+    public function setValue(string $key, $value): void
+    {
+        $this->cache->set($key, $value);
+    }
+}
+```
+
+
+## Configuration
+
+Runtime configuration not needed.
 
 Data is stored in the `cache` table, created like this:
 
