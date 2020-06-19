@@ -11,7 +11,7 @@ namespace Umonkey\Cache;
 use Psr\SimpleCache\CacheInterface;
 use Umonkey\Database;
 
-class DatabaseCache implements implements CacheInterface
+class DatabaseCache implements CacheInterface
 {
     /**
      * Database interface.

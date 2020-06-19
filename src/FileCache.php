@@ -10,7 +10,7 @@ namespace Umonkey\Cache;
 
 use Psr\SimpleCache\CacheInterface;
 
-class FileCache implements implements CacheInterface
+class FileCache implements CacheInterface
 {
     /**
      * Root folder.
